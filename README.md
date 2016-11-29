@@ -1,2 +1,2 @@
-# fys4150-project-5
-Project 5: Astronomy
+# Project 5 in Computational Physics
+N-body simulation of an open galactic cluster
