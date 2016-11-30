@@ -2,10 +2,11 @@
 #include <iostream>
 using namespace std;
 
-GalacticCluster::GalacticCluster() :
+GalacticCluster::GalacticCluster(double epsilon) :
     m_kineticEnergy(0),
     m_potentialEnergy(0)
 {
+    eps = epsilon;
     pi = 3.14159265358979323846;
 }
 
@@ -34,7 +35,7 @@ void GalacticCluster::calculateForcesAndEnergy()
             double dr = deltaRVector.length();
 
             // Calculate the force
-            vec3 force = -4*pi*pi* body1.mass * body2.mass / (dr*dr*dr) * deltaRVector; // check dr^3 if still correct
+            vec3 force = -4*pi*pi* body1.mass * body2.mass / (dr*dr*dr + eps*eps*dr) * deltaRVector; //
             body1.force += force;
             body2.force -= force;
 
