@@ -9,7 +9,7 @@
 class GalacticCluster
 {
 public:
-    GalacticCluster();
+    GalacticCluster(double epsilon);
     CelestialBody &createCelestialBody(vec3 position, vec3 velocity, double mass);
     void calculateForcesAndEnergy();
     int numberOfBodies() const;
@@ -23,6 +23,8 @@ public:
     vec3 momentum() const;
     std::vector<CelestialBody> &bodies();
     std::vector<CelestialBody> m_bodies;
+
+    double eps;
 
 private:
     vec3 m_angularMomentum;
