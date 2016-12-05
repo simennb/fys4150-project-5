@@ -6,8 +6,7 @@ class Integrator
 {
 public:
     double m_dt;
-    char const *num_method;
-    Integrator(double dt, const char *method);
+    Integrator(double dt);
     void integrateOneStep(class GalacticCluster &system);
 };
 

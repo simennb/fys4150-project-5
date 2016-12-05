@@ -12,6 +12,7 @@ public:
     GalacticCluster(double epsilon);
     CelestialBody &createCelestialBody(vec3 position, vec3 velocity, double mass);
     void calculateForcesAndEnergy();
+    void gravitationalConstant(int N, double R0, double M0);
     int numberOfBodies() const;
 
     double totalEnergy() const;
@@ -33,6 +34,7 @@ private:
     double m_kineticEnergy;
     double m_potentialEnergy;
     double pi;
+    double G;
 };
 
 #endif // GALACTICCLUSTER_H
