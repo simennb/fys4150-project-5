@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
-//#include <armadillo>
 #include <time.h>
 #include "galacticcluster.h"
 #include "integrator.h"
@@ -13,34 +12,66 @@
 #include "celestialbody.h"
 
 using namespace std;
-//using namespace arma;
 
 /* TODO:
- * - cmd-arguments: N, R0?, M0?, dt, eps, numsteps
+ * - cmd-arguments: N, R0?, M0?, dt, eps, numsteps             semi DONE
  * - dr^3 + eps^2*dr, check if correct in situation
- * - remove method dependence in integrator?
+ * - fix gravitational constant G.
+ * - remove method dependence in integrator?                        DONE
  * - fix why file initialization doesnt work first call
- * - should write masses to file somehow
+ * - should write masses to file somehow                            DONE
+ * - Should we have task structure? if so, how would we set it up?
+ * - particles ejected
+ * - atm initializing in a cube of R0^3 volume, not sphere
  *
+ * Tasks:
+ *  a) extend code from 3, need to find G in these units! so some math
+ *    - add function to galacticcluster to determine G after adding all bodies?
+ *    - find t_coll
+ *  b) run system for a few t_coll, check for equilibrium time
+ *  c) calculate kinetic and potential energy of the system, check conservation
+ *    - check ejection from system, and its dependence on N
+ *  d) add smoothing factor, try different values for energy conservation
+ *    - compare with previous results
+ *  e) test of virial theorem
+ *  f) density of particles, mostly not c++ related
  *
+ * Questions:
+ *  - should mu = Mmean just be M0? Or is it important to calculate it more precisely?
+ *  - rng inside galacticcluster::createcelestialbody, or just in main?
+ *
+ * Potential task structure:
+ *  b) Runs program with just storing positions (and masses) to file
+ *  c) Runs with checks for potential and kinetic energy. Calculates energy removed by ejection
+ *  - both b) and c) can be run to check for the effects of varying eps, so don't need unique for that one?
+ *  e) virial theorem, do we need to do anything in c++?
+ *  f) density, can use b) since we write masses to file there? Yeah, python plotting and running b for various N
  */
 
 int main(int argc, char *argv[])
 {
-    int N  = 10; // number of objects
-    int numsteps = 1000;
-    double dt = 0.01;
-    double R0 = 20.0;
-    double eps = 0.0;
-    char const *method = "Verlet";
+    if (argc<5)
+    {
+        cout<<"Usage: "<<argv[0]<<" N"<<" t_coll"<<" dt"<<" eps"<<endl;
+        // add explanation of the different parameters
+        exit(1);
+    }
+    int N  = atoi(argv[1]);           // number of objects
+    double t_coll = atof(argv[2]);    // number of t_coll we run the simulation
+    double dt  = atof(argv[3]);       // time step
+    double eps = atof(argv[4]);       // smoothing factor to newton's gravitation
+    int numsteps = (int)(t_coll/dt);  // number of time steps
 
-    // Initializing filename
-    string filename = "../benchmarks/pos_dt"+to_string(dt)+"_steps"+to_string(numsteps)+".xyz";
+    // Initializing filename and determining how often we want to write to file
+    string filename = "../benchmarks/pos_N"+to_string(N)+"_dt"+to_string(dt)+"_tcoll_"+to_string(t_coll)+"_eps"+to_string(eps)+".xyz";
+    int numfilesteps = 100;  // max number of steps we write to file, might change later
+    int iter = 1;
+    if (numsteps>numfilesteps) iter = numsteps/numfilesteps;
 
     // Initializing random device and random number generators
     std::random_device rd;
     std::mt19937_64 gen(rd());
-    std::uniform_real_distribution<double> uniform_RNG(0.0,R0); // Uniform probability distribution
+    std::uniform_real_distribution<double> uniform_RNG(-20.0,20.0); // Uniform probability distribution
     std::normal_distribution<double> gaussian_RNG(10,1); // Gaussian probability distribution
 
     // Initializing system and adding bodies
@@ -50,15 +81,20 @@ int main(int argc, char *argv[])
         vec3 pos(uniform_RNG(gen),uniform_RNG(gen),uniform_RNG(gen));
         galacticCluster.createCelestialBody(pos, vec3(0.0,0.0,0.0), gaussian_RNG(gen));
     }
+    galacticCluster.gravitationalConstant(N,20.0,10.0);
 
     // Integration loop
-    Integrator integrator(dt,method);
+    Integrator integrator(dt);
     galacticCluster.writeToFile(filename);
     for (int step=0; step<numsteps; step++)
     {
         integrator.integrateOneStep(galacticCluster);
 
-        if (step%100 == 0) galacticCluster.writeToFile(filename);
+//        if (step%iter == 0)
+  //      {
+    //        cout<<galacticCluster.totalEnergy()<<endl;
+      //  }
+        if (step%iter == 0) galacticCluster.writeToFile(filename);  // only write to file every iter steps
     }
 
     return 0;

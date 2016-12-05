@@ -1,5 +1,6 @@
 #include "galacticcluster.h"
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 GalacticCluster::GalacticCluster(double epsilon) :
@@ -13,6 +14,12 @@ GalacticCluster::GalacticCluster(double epsilon) :
 CelestialBody& GalacticCluster::createCelestialBody(vec3 position, vec3 velocity, double mass) {
     m_bodies.push_back( CelestialBody(position, velocity, mass) );
     return m_bodies.back(); // Return reference to the newest added celestial body
+}
+
+void GalacticCluster::gravitationalConstant(int N, double R0, double M0)
+{
+    G = pi*pi*R0*R0*R0/(8.0*N*M0); // assuming M0 is mean, which is at least satisfied-ish for large N
+    cout<<G<<endl;
 }
 
 void GalacticCluster::calculateForcesAndEnergy()
@@ -35,12 +42,12 @@ void GalacticCluster::calculateForcesAndEnergy()
             double dr = deltaRVector.length();
 
             // Calculate the force
-            vec3 force = -4*pi*pi* body1.mass * body2.mass / (dr*dr*dr + eps*eps*dr) * deltaRVector; //
+            vec3 force = -G*body1.mass * body2.mass / (dr*dr*dr + eps*eps*dr) * deltaRVector; //
             body1.force += force;
             body2.force -= force;
 
             // Potential energy
-            m_potentialEnergy += 4*pi*pi * body1.mass * body2.mass / dr;
+            m_potentialEnergy -= G * body1.mass * body2.mass / dr;
         }
 
         m_momentum += body1.mass*body1.velocity;
@@ -82,7 +89,7 @@ void GalacticCluster::writeToFile(string filename)
     m_file << numberOfBodies() << endl;
     m_file << "Comment line that needs to be here. Balle." << endl;
     for(CelestialBody &body : m_bodies) {
-        m_file << "1 " << body.position.x() << " " << body.position.y() << " " << body.position.z() << "\n";
+        m_file<<body.mass<<" "<< body.position.x() <<" "<< body.position.y() <<" "<< body.position.z() << "\n";
     }
 }
 
