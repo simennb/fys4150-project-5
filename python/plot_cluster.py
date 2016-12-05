@@ -12,10 +12,15 @@ def read_file(filename):
     j = 0
     k = 0
     m = 0
+
+    
     for line in data:
         if i == 0:
             num_bodies = int(line)
             positions = [zeros((totlines/(num_bodies+2),3)) for a in range(num_bodies)]
+
+            mass = zeros(num_bodies)
+            
             j += 1
         elif i == j*(num_bodies+2):
             k = 0
@@ -24,14 +29,18 @@ def read_file(filename):
             a = line.split(' ')
 
             positions[k][int(m)] = (array([float(a[1]),float(a[2]),float(a[3])]))
+
+            if int(m) == 0:
+                mass[k] = float(a[0])
+            
             k += 1
             m += 1./num_bodies
         i += 1
     data.close()
-    return positions
+    return positions, mass
 
 if __name__=='__main__':
-    filename = '../benchmarks/pos_N100_dt0.001000_tcoll_5.000000_eps0.200000.xyz'
+    filename = '../benchmarks/pos_N152_dt0.010000_tcoll_1.000000_eps0.000000.xyz'
     pos = read_file(filename)
     figure()
     max_time = len(pos[0][:,0])
@@ -46,8 +55,8 @@ if __name__=='__main__':
         title('Open cluster, t = %.1f t_coll'%(time/float(max_time)*5),size=15)
         grid('on')
         savefig('../figures/plot_200eps02_%3d.png'%time)
-#    show()
+        show()
 
-    import os
-    import subprocess
-    subprocess.call('convert -delay 8 -loop 0 ../figures/plot_200eps02_*.png ../figures/anim.gif', shell=True)
+    #import os
+    #import subprocess
+    #subprocess.call('convert -delay 8 -loop 0 ../figures/plot_200eps02_*.png ../figures/anim.gif', shell=True)

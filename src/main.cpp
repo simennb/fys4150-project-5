@@ -48,6 +48,8 @@ using namespace std;
  *  f) density, can use b) since we write masses to file there? Yeah, python plotting and running b for various N
  */
 
+vec3 to_cart(double r, double theta, double phi, int limits);
+
 int main(int argc, char *argv[])
 {
     if (argc<5)
@@ -71,14 +73,15 @@ int main(int argc, char *argv[])
     // Initializing random device and random number generators
     std::random_device rd;
     std::mt19937_64 gen(rd());
-    std::uniform_real_distribution<double> uniform_RNG(-20.0,20.0); // Uniform probability distribution
+    std::uniform_real_distribution<double> uniform_RNG(0.0,1.0); // Uniform probability distribution
     std::normal_distribution<double> gaussian_RNG(10,1); // Gaussian probability distribution
 
     // Initializing system and adding bodies
     GalacticCluster galacticCluster(eps);
     for (int i=0; i<N; i++)
     {
-        vec3 pos(uniform_RNG(gen),uniform_RNG(gen),uniform_RNG(gen));
+        vec3 pos = to_cart(uniform_RNG(gen),uniform_RNG(gen),uniform_RNG(gen), 20);
+        //vec3 pos(uniform_RNG(gen),uniform_RNG(gen),uniform_RNG(gen));
         galacticCluster.createCelestialBody(pos, vec3(0.0,0.0,0.0), gaussian_RNG(gen));
     }
     galacticCluster.gravitationalConstant(N,20.0,10.0);
@@ -98,4 +101,21 @@ int main(int argc, char *argv[])
     }
 
     return 0;
+}
+
+vec3 to_cart(double r, double theta, double phi, int limits)
+{
+    // to ensure a sphere in cartesian coordinates
+
+    double theta1 = theta*M_PI;
+    double phi1 = phi*2*M_PI;
+    double r1 = r*limits;
+
+    double x = r1*sin(theta1)*cos(phi1);
+    double y = r1*sin(theta1)*sin(phi1);
+    double z = r1*cos(theta1);
+
+    vec3 cartesian(x, y, z);
+
+    return cartesian;
 }
