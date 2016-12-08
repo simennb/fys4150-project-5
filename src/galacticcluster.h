@@ -12,7 +12,8 @@ public:
     GalacticCluster(double epsilon);
     CelestialBody &createCelestialBody(vec3 position, vec3 velocity, double mass);
     void calculateForcesAndEnergy();
-    void gravitationalConstant(int N, double R0, double M0);
+    void calculateEnergyPerParticle();
+    void initializer(double R0, double M0);
     int numberOfBodies() const;
 
     double totalEnergy() const;
@@ -30,10 +31,11 @@ public:
 private:
     vec3 m_angularMomentum;
     vec3 m_momentum;
+    std::vector<double> vec_potentialEnergy;
+    std::vector<double> vec_kineticEnergy;
     std::ofstream m_file;
     double m_kineticEnergy;
     double m_potentialEnergy;
-    double pi;
     double G;
 };
 

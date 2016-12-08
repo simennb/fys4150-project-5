@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from plot_cluster import read_file
+import sys
 
 N = 300
 dt = 0.01
@@ -13,7 +14,7 @@ filename = "../benchmarks/pos_N%d_dt%1.6f_tcoll_%1.6f_eps%1.6f.xyz" %(N, dt, tco
 
 
 
-pos, mass = read_file(filename)
+pos, mass, potential, kinetic = read_file(filename)
 
 r = np.zeros(N)
 
@@ -23,8 +24,8 @@ for i in pos:
     counter += 1
 
 
-#print r
-#print np.mean(r)
+print np.std(r)
+print np.mean(r)
 
 
 dr = 70
@@ -40,11 +41,14 @@ for i in range(0, len(radii)-1):
             mass_density[i] += mass[j]
             number_density[i] += 1
 
-#print mass_density
-print number_density
-
-print mass_density
-
+plt.figure(1)
 n, bins, patches = plt.hist(radii[:-1], bins = radii, weights = number_density)
 
-plt.show()
+plt.figure(2)
+n, bins, patches = plt.hist(radii[:-1], bins = radii, weights = mass_density)
+
+plt.figure(1)
+plt.title('Number of particles per radii')
+
+if len(sys.argv) > 1 and sys.argv[1] == "show":
+    plt.show()
