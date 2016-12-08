@@ -128,9 +128,8 @@
 \usepackage{titlesec}% http://ctan.org/pkg/titlesec
 \renewcommand{\thesubsection}{\arabic{subsection}}
 
-
 % Title/name/date
-\title{FYS4150 - Project 5}
+\title{FYS4150 - Project 5\\$N$-body simulation of an open galactic cluster}
 \author{Simen Nyhus Bastnes \& Eirik Ramsli Hauge}
 \date{9. December 2016}
 
@@ -142,12 +141,55 @@
 \includegraphics[scale=0.5]{totoro.jpg}
 \end{figure}
 \end{abstract}
-\subsection*{Introduction}
-\subsection*{Theory}
-\subsection*{Experimental}
+\subsection{Introduction}
+In this project we will attempt to develop code for simulating open galactic clusters. Taking inspiration from an article by M. Joyce and co-workers \red{cite}, we will build a simple model of an open galactic cluster. \red{redundancy ftw} An open cluster is an object consisting of a few thousand gravitationally bound stars, created from the collapse of a molecular cloud.\\\\
+First, we look at some of the physics behind our model, making sure to find ideal units to fit our timescale. Running our model for $N = 100$ particles, we check the stability of our system, and find an ideal smoothing function for the gravitational force to remove some of the numerical instabilities. Having done that, we check how long the system takes to stabilize, conservation of energy, and checking the fraction of particles ejected from the system. Looking at only the bound particles, we can check if our results are consistent with the virial theorem.\\\\
+Finally, we increase the number of particles while keeping the total mass constant, to see how the radial density looks like. This can then be compared to well known profiles such as the Navarro-Frenk-White profile.
+
+\subsection{Theory}
+\red{brief theory about open clusters here or in introduction?}
+\subsubsection{N-body simulation}
+Earlier this fall, we developed code that simulated the our Solar system.
+\begin{align*}
+  F = -\frac{G M_1, M_2}{r^2}\numberthis\label{eq:newton}
+\end{align*}
+% def metal():
+
+\subsubsection{Spherical top-hat model}
+In order to find units of time that fit the timescale, we will take a short detour into perturbation theory. While solving analytically can be difficult (or impossible) beyond linear perturbation theory, there exists an analytical solution for the so-called ``spherical top-hat'' model \red{cite}. In this model, the perturbation is a sphere of radius $R$, with a uniform density inside. It can be shown that this model has a parametrised solution
+\begin{align*}
+  R &= A(1-\cos\theta)\numberthis\label{eq:top-hat}\\
+  t &= B(\theta-\sin\theta)\\
+  &A^3 = GMB^2 
+\end{align*}
+From equation \eqref{eq:top-hat}, we 
+Page 18ish in cosmo1.5 lecture notes\\
+collapse time, spherical top hat model, virialization.
+Sphere completely collapses at $\theta = 2\pi$ \red{add image maybe?}
+
+\subsubsection{Particle ejection}
+
+\subsubsection{Virial theorem}
+For a bound gravitational system in equilibrium, the virial theorem says that
+\begin{align*}
+  2\langle K\rangle &= -\langle V\rangle \numberthis\label{eq:virial}
+\end{align*}
+where $\langle K\rangle$ is the time-average kinetic energy of the system, and $\langle V\rangle$ is the time-average potential energy. By the ergodic hypothesis, we can assume that an average over a large enough system should give the same result as the time average. \red{do like this, or just blatantly copy from project as i can't find any creative ways to rewrite that} 
+\subsubsection{Radial density of particles}
+simple expression \red{meow}
+\begin{align*}
+  n(r) = \frac{n_0}{\Big(1+(\frac{r}{r_0})^4\Big)} \numberthis\label{eq:radial_dist}
+\end{align*}
+Navarro-Frenk-White profile
+\begin{align*}
+  \rho(r) &= \frac{\rho_0}{\frac{r}{r_0}\Big(1+\frac{r}{r_0}\Big)^2}\numberthis\label{eq:NFW}
+\end{align*}
+\subsubsection{Numerical solving}
+velocity verlet
+\subsection{Experimental}
 The programs used in this project can be found in the GitHub repository \cite{GitHub}, in the \texttt{/src/} folder. When running the program it takes \husk{Command line arguments.} command line arguments, \husk{list command line arguments and tell which are optional}. all data written to file by the program are stored in \texttt{/benchmarks/} with different subfolders for each runmode.
-\subsection*{Results}
-\subsection*{Discussion}
-\subsection*{Conclusion}
+\subsection{Results}
+\subsection{Discussion}
+\subsection{Conclusion}
 \bibliography{references}
 \end{document}
