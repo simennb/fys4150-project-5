@@ -2,7 +2,7 @@ from plot_cluster import *
 from mpl_toolkits.mplot3d import Axes3D
 
 filename = '../benchmarks/pos_N152_dt0.010000_tcoll_1.000000_eps0.000000.xyz'
-pos = read_file(filename)
+pos, mass, potential, kinetic = read_file(filename)
 
 fig3d = figure()
 ax3d = fig3d.add_subplot(111,projection='3d')

@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
     double dt  = atof(argv[3]);       // time step
     double eps = atof(argv[4]);       // smoothing factor to newton's gravitation
     int numsteps = (int)(t_coll/dt);  // number of time steps
+    double masscale = 100.0/N;       // mass scaling factor for constant total mass
 
     // Initializing filename and determining how often we want to write to file
     string filename = "../benchmarks/pos_N"+to_string(N)+"_dt"+to_string(dt)+"_tcoll_"+to_string(t_coll)+"_eps"+to_string(eps)+".xyz";
@@ -74,7 +75,7 @@ int main(int argc, char *argv[])
     std::random_device rd;
     std::mt19937_64 gen(rd());
     std::uniform_real_distribution<double> uniform_RNG(0.0,1.0); // Uniform probability distribution
-    std::normal_distribution<double> gaussian_RNG(10,1); // Gaussian probability distribution
+    std::normal_distribution<double> gaussian_RNG(10*masscale,1*masscale); // Gaussian probability distribution
 
     // Initializing system and adding bodies
     GalacticCluster galacticCluster(eps);
@@ -84,7 +85,7 @@ int main(int argc, char *argv[])
         //vec3 pos(uniform_RNG(gen),uniform_RNG(gen),uniform_RNG(gen));
         galacticCluster.createCelestialBody(pos, vec3(0.0,0.0,0.0), gaussian_RNG(gen));
     }
-    galacticCluster.gravitationalConstant(N,20.0,10.0);
+    galacticCluster.initializer(20.0,10.0);
 
     // Integration loop
     Integrator integrator(dt);
@@ -97,9 +98,12 @@ int main(int argc, char *argv[])
   //      {
     //        cout<<galacticCluster.totalEnergy()<<endl;
       //  }
-        if (step%iter == 0) galacticCluster.writeToFile(filename);  // only write to file every iter steps
+        if (step%iter == 0)
+        {
+            galacticCluster.calculateEnergyPerParticle();
+            galacticCluster.writeToFile(filename);  // only write to file every iter steps
+        }
     }
-
     return 0;
 }
 

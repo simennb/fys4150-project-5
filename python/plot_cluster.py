@@ -19,29 +19,38 @@ def read_file(filename):
             num_bodies = int(line)
             positions = [zeros((totlines/(num_bodies+2),3)) for a in range(num_bodies)]
 
-            mass = zeros(num_bodies)
+            potential = [zeros(totlines/(num_bodies+2)) for a in range(num_bodies)]
+            kinetic =   [zeros(totlines/(num_bodies+2)) for a in range(num_bodies)]
+
+            #print potential
             
+            mass = zeros(num_bodies)
+    
             j += 1
         elif i == j*(num_bodies+2):
             k = 0
             j += 1
         elif not line.startswith('Comment'):
             a = line.split(' ')
-
+            
             positions[k][int(m)] = (array([float(a[1]),float(a[2]),float(a[3])]))
+            potential[k][int(m)] = float(a[4])#(array(float(a[4])))
+            kinetic[k][int(m)]  = (array(float(a[5])))
 
             if int(m) == 0:
                 mass[k] = float(a[0])
-            
+                
+            if k == num_bodies - 1:
+                m += 1
             k += 1
-            m += 1./num_bodies
+            
         i += 1
     data.close()
-    return positions, mass
+    return positions, mass, potential, kinetic
 
 if __name__=='__main__':
-    filename = '../benchmarks/pos_N152_dt0.010000_tcoll_1.000000_eps0.000000.xyz'
-    pos = read_file(filename)
+    filename = '../benchmarks/pos_N300_dt0.010000_tcoll_1.000000_eps0.200000.xyz'
+    pos, mass, potential, kinetic = read_file(filename)
     figure()
     max_time = len(pos[0][:,0])
     for time in range(max_time):
