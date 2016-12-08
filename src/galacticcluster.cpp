@@ -27,8 +27,8 @@ void GalacticCluster::calculateForcesAndEnergy()
 {
     m_kineticEnergy = 0;
     m_potentialEnergy = 0;
-    m_angularMomentum.zeros();
-    m_momentum.zeros();
+    //m_angularMomentum.zeros();
+    //m_momentum.zeros();
 
     for(CelestialBody &body : m_bodies) {
         // Reset forces on all bodies

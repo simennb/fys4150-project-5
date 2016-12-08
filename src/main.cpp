@@ -94,10 +94,10 @@ int main(int argc, char *argv[])
     {
         integrator.integrateOneStep(galacticCluster);
 
-//        if (step%iter == 0)
-  //      {
-    //        cout<<galacticCluster.totalEnergy()<<endl;
-      //  }
+        if (step%(iter*10) == 0)
+        {
+            cout<<galacticCluster.totalEnergy()<<endl;
+        }
         if (step%iter == 0)
         {
             galacticCluster.calculateEnergyPerParticle();

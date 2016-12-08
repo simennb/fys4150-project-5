@@ -14,11 +14,15 @@ void Integrator::integrateOneStep(GalacticCluster &system)
 
     /* Velocity Verlet */
     for(CelestialBody &body : system.bodies()) {
-        vec3 accel1 = body.force/body.mass; // acceleration before updating x(i) to x(i+1)
-        body.position += body.velocity*m_dt + 0.5 * accel1 * pow(m_dt,2);
-
-        system.calculateForcesAndEnergy(); // updating forces at x(i+1)
-        body.velocity += 0.5* (accel1 + body.force / body.mass) * m_dt;
+        body.velocity += (m_dt/2)*(body.force / body.mass); //Calculate velocity at half step
+        body.position += body.velocity*m_dt;
     }
+    system.calculateForcesAndEnergy(); // updating forces at x(i+1)
+
+    for(CelestialBody &body : system.bodies())
+    {
+        body.velocity += (m_dt/2)*(body.force / body.mass);
+    }
+
 }
 
