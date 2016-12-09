@@ -60,9 +60,6 @@ void GalacticCluster::calculateForcesAndEnergy()
 
 void GalacticCluster::calculateEnergyPerParticle()
 {
-    m_kineticEnergy = 0;
-    m_potentialEnergy = 0;
-
     for(int i=0; i<numberOfBodies(); i++) {
         CelestialBody &body1 = m_bodies[i];
         double temp_potentialEnergy = 0; // Temporary sum of potential energy
@@ -108,7 +105,7 @@ double GalacticCluster::kineticEnergy() const
     return m_kineticEnergy;
 }
 
-void GalacticCluster::writeToFile(string filename)
+void GalacticCluster::writeToFilePerParticle(string filename)
 {
     if(!m_file.good()) {
         m_file.open(filename.c_str(), ofstream::out);
@@ -126,6 +123,22 @@ void GalacticCluster::writeToFile(string filename)
         m_file<< " " << vec_potentialEnergy[counter] << " " << vec_kineticEnergy[counter] << "\n";
         counter += 1;
     }
+}
+
+void GalacticCluster::writeToFileEnergyPerTime(string filename)
+{
+    if(!E_file.good()) {
+        E_file.open(filename.c_str(), ofstream::out);
+        if(!E_file.good()) {
+            cout << "Error opening file " << filename << ". Aborting!" << endl;
+            terminate();
+        }
+    }
+
+    calculateForcesAndEnergy();
+
+    E_file << " " << m_kineticEnergy << " " << m_potentialEnergy << endl;
+
 }
 
 vec3 GalacticCluster::angularMomentum() const
