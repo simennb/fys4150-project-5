@@ -270,9 +270,149 @@ In order to solve the system numerically, we will employ the Velocity Verlet met
 \end{algorithmic}
 \end{algorithm}
 \subsection{Experimental}
-The programs used in this project can be found in the GitHub repository \cite{GitHub}, in the \texttt{/src/} folder. When running the program it takes \husk{Command line arguments.} command line arguments, \husk{list command line arguments and tell which are optional}. all data written to file by the program are stored in \texttt{/benchmarks/} with different subfolders for each runmode.
+The programs used in this project can be found in the GitHub repository \cite{GitHub}, in the \texttt{/src/} folder. When running the program it takes 4 command line arguments: \texttt{N}, \texttt{t\_coll}, \texttt{dt} and \texttt{eps}. \texttt{N} is the number of stars in our cluster, \texttt{t\_coll} is our time unit, based on the collision time, \texttt{dt} is the time step and \texttt{eps} is the smoothing factor used in the force calculation. All data written to file by the main program are stored in \texttt{/benchmarks/} where most of the data analysis were done by python programs stored in \texttt{/python/} and the figures and gifs can be found in \texttt{/figures/}. \\ \\
+The simulation starts by randomly positioning different stars inside a sphere with radius R = 20 light years. Each star will have an individual mass where the total mass is forced to be 1000 solar masses and an initial velocity set to be 0 in all directions. \\
+Once all the positions and masses have been set, we can find the forces acting between them. While using velocity verlet to simulate the behaviour we can also find the individual kinetic and potential energy of each star as well as the total kinetic and potential energy of the system. 
 \subsection{Results}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task b        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A simulation of N = 100 stars over a time of 4 collision times with a time step of 0.001 and eps set to 0 gives us the animation found in \husk{REF!}. From this animation we can see that we don't reach an equilibrium. \husk{Is this correct?}
+\\ \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task c        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Letting our program run for different number of particles we found the total energy, the fraction of particles with positive total energy and the kinetic energy of the escaped particles. These results are shown below in figure \ref{fig:noeps}.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskc/totenergy_N200}.png}
+	\caption{Number of particles: 200}
+	\label{subfig:noeps200}
+\end{subfigure}
+\qquad
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskc/totenergy_N500}.png}
+	\caption{Number of particles: 500}
+	\label{subfig:noeps500}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskc/totenergy_N1000}.png}
+	\caption{Number of particles: 1000}
+	\label{subfig:noeps1000}
+\end{subfigure}
+\caption{Total energy and fraction of particles with positive total energy for different number of particles.}
+\label{fig:noeps}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task d        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+To find the best smoothing factor discussed above in the theory we used the trial and error method. For 200 stars with a time step of 0.001 and a time from 0 to 5 collision times we found the total energy as presented in figure \husk{fig:totalEnergy}
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_eps2.00e+00_N200}.png}
+	\caption{$\epsilon$ = 2.0}
+	\label{subfig:eps2}
+\end{subfigure}
+\qquad
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_eps2.00e-01_N200}.png}
+	\caption{$\epsilon$ = 0.2}
+	\label{subfig:eps0.2}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_eps2.00e-02_N200}.png}
+	\caption{$\epsilon$ = 0.02}
+	\label{subfig:eps0.02}
+\end{subfigure}
+\caption{Total energy and fraction of particles with positive total energy for different smoothing factors for a simulation of 200 stars.}
+\label{fig:totalEnergy}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task e        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+To see if we our results were consisten with the viral theorem, we checked if the average of the potential energy subtracted from two times the average of the bound particles kinetic energy  was zero. The result are plotted in figure \ref{fig:viral}
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taske/viral_N100}.png}
+	\caption{Number of particles: 100}
+	\label{subfig:viral100}
+\end{subfigure}
+\qquad
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taske/viral_N300}.png}
+	\caption{Number of particles: 300}
+	\label{subfig:viral300}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taske/viral_N500}.png}
+	\caption{Number of particles: 500}
+	\label{subfig:viral500}
+\end{subfigure}
+\caption{Total energy for different smoothing factors for a simulation of 200 stars.}
+\label{fig:viral}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task f        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+By simulating different number of particles with the same total mass we were able to find the radial density, mean distance from origo and the standard derivation of distance from origo (see figure \ref{fig:radialDens} and \ref{fig:meanstd})
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskf/radialDens_N100}.png}
+	\caption{Number of particles: 100}
+	\label{subfig:radialDens100}
+\end{subfigure}
+\qquad
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskf/radialDens_N500}.png}
+	\caption{Number of particles: 500}
+	\label{subfig:radialDens500}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskf/radialDens_N1000}.png}
+	\caption{Number of particles: 1000}
+	\label{subfig:radialDens1000}
+\end{subfigure}
+\caption{Radial density for different number of particles.}
+\label{fig:radialDens}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{{../figures/taskf/meanstd}.png}
+\caption{Standard deviation and average distance from origo for all particles}
+\label{fig:meanstd}
+\end{figure}
 \subsection{Discussion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task a        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task b        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task c        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task d        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task e        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%         task f        %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+As we can see from figure \ref{fig:radialDens} the cluster is densest near origo. This is as expected 
+
 \subsection{Conclusion}
 \bibliography{references}
 \end{document}

@@ -19,7 +19,8 @@ public:
     double totalEnergy() const;
     double potentialEnergy() const;
     double kineticEnergy() const;
-    void writeToFile(std::string filename);
+    void writeToFilePerParticle(std::string filename);
+    void writeToFileEnergyPerTime(std::string filename);
 
     vec3 angularMomentum() const;
     vec3 momentum() const;
@@ -34,6 +35,7 @@ private:
     std::vector<double> vec_potentialEnergy;
     std::vector<double> vec_kineticEnergy;
     std::ofstream m_file;
+    std::ofstream E_file;
     double m_kineticEnergy;
     double m_potentialEnergy;
     double G;
