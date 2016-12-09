@@ -147,9 +147,9 @@ First, we look at some of the physics behind our model, making sure to find idea
 Finally, we increase the number of particles while keeping the total mass constant, to see how the radial density looks like. This can then be compared to well known profiles such as the Navarro-Frenk-White profile.
 
 \subsection{Theory}
-\red{brief theory about open clusters here or in introduction?}
+
 \subsubsection{N-body simulation}
-In order to make our model, we will first look at some of the assumptions of our open cluster.
+In order to make our model of an open cluster, we will first look at some of the assumptions we make.
 \begin{itemize}
   \item Consists of $N$ separate particles only interacting with each other via the Newtonian gravitational force. The force between two particles are then
     \begin{align*}
@@ -160,7 +160,7 @@ In order to make our model, we will first look at some of the assumptions of our
   \item The particles start with little or no initial velocity, so-called \textit{cold collapse}.
   \item The particles are uniformly distributed within a sphere of radius $R_0 = 20$ ly. Masses are randomly distributed by a Gaussian distribution around $10\,M_{\odot}$ with a deviation of one solar mass.
 \end{itemize}
-Earlier this fall, we made a model of our solar system. \red{cite report 3} We recall that for a system using Newtonian gravity, Newton's second law of motion gives us the following differential equations for particle $i$
+Earlier this fall, we made a model of our solar system. \red{cite report 3} We recall that for a system only affected by Newtonian gravity, Newton's second law of motion gives us the following differential equations for particle $i$
 \begin{align*}
   \frac{d^2\mathbf{r_i}}{dt^2} &= \sum\limits_{j\neq i}\frac{F_G(\mathbf{r}_{ij}, M_i,M_j)}{M_i}\numberthis\label{eq:diff_eq}
 \end{align*}
@@ -197,37 +197,78 @@ Since our simulation starts with cold collapse (at turn-around $\theta = \pi$), 
 As this time, $t_{\text{coll}}$ is an analytical expression for collapse in the \textit{spherical top-hat model}, this is a much more fitting timescale to probe our system with compared to seconds or years.\\\\
 In order to make use of this, we need to scale equation \eqref{eq:newton} in these units, specifically $G$. Rewriting equation \eqref{eq:t_coll} gives us
 \begin{align*}
-  G = \frac{3\pi}{32\rho_0t_{\text{coll}}^2}
+  G &= \frac{3\pi}{32\rho_0t_{\text{coll}}^2}
   \intertext{Scaling so that we are looking at timescales of order $t_{\text{coll}}$, and inserting $\rho_0 = 4/3\pi R_0^3$}
   G &= \frac{\pi^2R_0^3}{8M_{tot}} = \frac{\pi^2R_0^3}{8N\mu} \numberthis\label{eq:G}
 \end{align*}
 where $N$ is the number of particles, and $\mu$ is the average mass (in solar masses) per particle.\\\\
-Inserting equation \eqref{eq:G} into the differential equation \eqref{eq:diff_eq} gives us the units $[\text{ly}/t_{\text{coll}}]$, which is what we wanted.
+Inserting equation \eqref{eq:G} into the differential equation given by \eqref{eq:diff_eq} gives us the units $[\text{ly}/t_{\text{coll}}]$, which is what we wanted.
 %Page 18ish in cosmo1.5 lecture notes\\
 %collapse time, spherical top hat model, virialization.
 %Sphere completely collapses at $\theta = 2\pi$ \red{add image maybe?}
 
 \subsubsection{Numerical instabilities}
-try to find fitting size order from mean particle distance and refer to article
+Since we will be solving the system numerically, we have to be aware of some of the problems of doing so. In this project, we will focus on the numerical instability that arises when two particles come very close to each other. When two particles get close to each other, the accelerations get large, and unless we have very small timesteps, the trajectory of a particle is not calculated accurately. To deal with this, we will introduce a very simple smoothing function by modifying the Newtonian force \eqref{eq:newton}
+\begin{align*}
+  F_{\text{mod}} &= \frac{GM_1M_2}{r^2 + \varepsilon^2} \numberthis\label{eq:newton_mod}
+\end{align*}
+where $\varepsilon$ is a small real constant that causes equation \eqref{eq:newton_mod} to be finite on short length scales. While adding this smoothing factor smoothes out the instabilities, it also means that on length scales smaller than $\varepsilon$, the trajectories are not integrated accurately. This means that we should make sure to set the smoothing factor $\varepsilon$ to a length so that 1) instabilities are smoothed out, and 2) the inaccuracy in the trajectory does not play a significant part of the macroscopic evolution of the system.\\\\
+As we discussed earlier, we assume the system to be collisionless, and that collisions (or close encounters) should not affect the system much. Since our particles does not represent point particles, but mass distributions with some finite radius, a really close encounter between two particles might not be fully collisionless. The smoothing factor does then in a sense represent the fact that our system is not fully collisionless, but the magnitude of it is most likely considerably larger than the scale at which collisions become relevant.\\\\
+Finding an ideal size for $\varepsilon$ can be difficult. A simple way to evaluate this is to first find the mean interparticle distance. \red{cite Joyce full}
+\begin{align*}
+  l &\equiv \bigg(\frac{3V}{4\pi N}\bigg)^{1/3} = \frac{R_0}{N^{1/3}} \numberthis\label{eq:mean_dist}
+\end{align*}
+where $R_0$ is the initial radius of the sphere, and $N$ is the number of particles. Since this is the average distance between the particles at the start of the simulation, we should make sure that our choice of $\varepsilon$ is significantly less than $l$, as it limits how small the structure is allowed to collapse. For example, for the situation $R_0 = 20$ and $N = 100$, we have $l \approx 4.3$.
+
+%try to find fitting size order from mean particle distance and refer to article
 \subsubsection{Particle ejection}
+Due to looking at a \textit{cold collapse}, all particles start with a negative energy, but as the system evolves, some of the particles can end up with a positive energy, and completely escape from the system. We can therefore identify these ejected particles by comparing the per particle kinetic and potential energy, and identifying which particles have a total energy greater than zero
+\begin{align*}
+  E_{i,\text{tot}} = K_i + V_i > 0 \numberthis\label{eq:ejection}
+\end{align*}
+where $K_i$ and $V_i$ is the kinetic and potential energy for particle $i$.\\\\
+The energy taken away from the system by particle ejection can be found by energy conservation and that once the system stabilizes, the potential energy of the ejected particles and the interaction between bound and ejected particles is negligible
+\begin{align*}
+  E_0 &= V_b + K_b + K_f \numberthis\label{eq:energy_ejection}
+\end{align*}
+where $E_0$ is the initial energy of the system, $V_b$ and $K_b$ is the kinetic and potential energy of the particles that are gravitationally bound, and $K_f$ is the kinetic energy of the ejected particles.
+$K_f$ can be found as discussed earlier in equation \eqref{eq:ejection}.
 
 \subsubsection{Virial theorem}
 For a bound gravitational system in equilibrium, the virial theorem says that
 \begin{align*}
   2\langle K\rangle &= -\langle V\rangle \numberthis\label{eq:virial}
 \end{align*}
-where $\langle K\rangle$ is the time-average kinetic energy of the system, and $\langle V\rangle$ is the time-average potential energy. By the ergodic hypothesis, we can assume that an average over a large enough system should give the same result as the time average. \red{do like this, or just blatantly copy from project as i can't find any creative ways to rewrite that} 
+where $\langle K\rangle$ is the time-average kinetic energy of the system, and $\langle V\rangle$ is the time-average potential energy. By the ergodic hypothesis, we can assume that an average over a large enough system should give the same result as the time average. Thus we have
+\begin{align*}
+  2K_b &= -V_b \numberthis\label{eq:virial2}
+\end{align*}
+where $K_b$ and $V_b$ are the energies for the bound particles, and can be found from equation \eqref{eq:energy_ejection}
+
 \subsubsection{Radial density of particles}
-simple expression \red{meow}
+For an approximately spherical symmetric collapsed halo (virialized structure), the radial density profile can often be fit very well with the simple expression
 \begin{align*}
   n(r) = \frac{n_0}{\Big(1+(\frac{r}{r_0})^4\Big)} \numberthis\label{eq:radial_dist}
 \end{align*}
-Navarro-Frenk-White profile
+where $n_0$ and the scale radius $r_0$ has some dependency on the number of particles $N$.\\\\
+The well-known Navarro-Frenk-White profile can also be used to compare with results.
 \begin{align*}
   \rho(r) &= \frac{\rho_0}{\frac{r}{r_0}\Big(1+\frac{r}{r_0}\Big)^2}\numberthis\label{eq:NFW}
 \end{align*}
+where $\rho_0$ and $r_0$ depends on $N$ in some way.
 \subsubsection{Numerical solving}
-velocity verlet
+In order to solve the system numerically, we will employ the Velocity Verlet method. A full derivation of the Velocity Verlet method can be found in \red{cite project 3}, where the following algorithm is also found.
+\begin{algorithm}[H]
+\small
+\caption{Velocity Verlet}\label{alg:VelVerlet}
+\begin{algorithmic}[1]
+\For{$i = 0, n$}
+\State $r_{i+1} = r_i + v_i h + \frac{1}{2} a_i h^2$
+\State $a_{i+1} = F_{G, r_{i+1}}/m$
+\State $v_{i+1} = v_i + \frac{1}{2} h (a_i + a_{i+1})$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
 \subsection{Experimental}
 The programs used in this project can be found in the GitHub repository \cite{GitHub}, in the \texttt{/src/} folder. When running the program it takes \husk{Command line arguments.} command line arguments, \husk{list command line arguments and tell which are optional}. all data written to file by the program are stored in \texttt{/benchmarks/} with different subfolders for each runmode.
 \subsection{Results}
