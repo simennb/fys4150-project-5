@@ -149,24 +149,66 @@ Finally, we increase the number of particles while keeping the total mass consta
 \subsection{Theory}
 \red{brief theory about open clusters here or in introduction?}
 \subsubsection{N-body simulation}
-Earlier this fall, we developed code that simulated the our Solar system.
+In order to make our model, we will first look at some of the assumptions of our open cluster.
+\begin{itemize}
+  \item Consists of $N$ separate particles only interacting with each other via the Newtonian gravitational force. The force between two particles are then
+    \begin{align*}
+      F_G = -\frac{G M_1, M_2}{r^2}\numberthis\label{eq:newton}
+    \end{align*}
+    where $G$ is the gravitational constant, $r$ is the distance between the particles, and $M_1$, $M_2$ is the mass of the particles. For most of the project, we will be looking at $N=100$ particles.
+  \item Since the only interaction is the gravitational force, the system is collisionless. If the probability of interactions between particles is low, then collisions have no significant effect on the results. For very large $N$, this might not hold as well.
+  \item The particles start with little or no initial velocity, so-called \textit{cold collapse}.
+  \item The particles are uniformly distributed within a sphere of radius $R_0 = 20$ ly. Masses are randomly distributed by a Gaussian distribution around $10\,M_{\odot}$ with a deviation of one solar mass.
+\end{itemize}
+Earlier this fall, we made a model of our solar system. \red{cite report 3} We recall that for a system using Newtonian gravity, Newton's second law of motion gives us the following differential equations for particle $i$
 \begin{align*}
-  F = -\frac{G M_1, M_2}{r^2}\numberthis\label{eq:newton}
+  \frac{d^2\mathbf{r_i}}{dt^2} &= \sum\limits_{j\neq i}\frac{F_G(\mathbf{r}_{ij}, M_i,M_j)}{M_i}\numberthis\label{eq:diff_eq}
 \end{align*}
+where $\mathbf{r}$ is a three-dimensional vector in $(x,y,z)$, and we sum over the gravitational contribution of the other particles. We note that the length and timescale should be adjusted to units more fit for the dynamics of the system.\\\\
+For the length scale, we can use lightyears, as the particles are initially uniformly distributed inside a sphere of radius $R_0 = 20$ ly. In order to find units of time that fit the timescale however, we will take a short detour into non-linear perturbation theory and cosmology.
 % def metal():
 
-\subsubsection{Spherical top-hat model}
-In order to find units of time that fit the timescale, we will take a short detour into perturbation theory. While solving analytically can be difficult (or impossible) beyond linear perturbation theory, there exists an analytical solution for the so-called ``spherical top-hat'' model \red{cite}. In this model, the perturbation is a sphere of radius $R$, with a uniform density inside. It can be shown that this model has a parametrised solution
+\subsubsection{The spherical top-hat model}
+While solving non-linear perturbation theory analytically can be difficult (or impossible), there does exists an analytical solution for the so-called ``\textit{spherical top-hat}'' model \red{cite cosmo notes}. In this model, we look at a spherical perturbation of radius $R$, with a uniform density inside. It can be shown that this model has a parametrised solution
 \begin{align*}
   R &= A(1-\cos\theta)\numberthis\label{eq:top-hat}\\
   t &= B(\theta-\sin\theta)\\
   &A^3 = GMB^2 
 \end{align*}
-From equation \eqref{eq:top-hat}, we 
-Page 18ish in cosmo1.5 lecture notes\\
-collapse time, spherical top hat model, virialization.
-Sphere completely collapses at $\theta = 2\pi$ \red{add image maybe?}
+From equation \eqref{eq:top-hat}, we see that the sphere reaches a maximum at $\theta = \pi$, at time $t=\pi B$ (also referred to as turn-around). The sphere collapses completely at $\theta = 2\pi$, at time $t = 2\pi B$. At $\theta = \tfrac{3\pi}{2}$, the model virializes at radius $1/2 R_0$. For the peak radius
+\begin{align*}
+  R(\theta = \pi) &= 2A = R_0\\
+  t(\theta = \pi) &= \pi B
+\end{align*}
+Solving for $B$
+\begin{align*}
+  B &= \frac{A^{3/2}}{\sqrt{GM}}
+  \intertext{Using that the density of the perturbation is given by $\rho_0 = M/V = M/(4/3\pi R_0^3)$}
+  B &= \frac{(R_0/2)^{3/2}}{\sqrt{G\frac{4\pi R_0^3\rho_0}{3}}}\\
+  B &= \sqrt{\frac{3}{32\pi G\rho_0}}
+\end{align*}
+Since our simulation starts with cold collapse (at turn-around $\theta = \pi$), the time it takes to collapse is
+\begin{align*}
+  t_{\text{coll}} &= t_{2\pi} - t_{\pi}\\
+  t_{\text{coll}} &= 2\pi B - \pi B = \pi B
+  \intertext{inserting the expression we found for $B$, we get the collapse time}
+  t_{\text{coll}} &= \sqrt{\frac{3\pi}{32G\rho_0}}\numberthis\label{eq:t_coll}
+\end{align*}
+As this time, $t_{\text{coll}}$ is an analytical expression for collapse in the \textit{spherical top-hat model}, this is a much more fitting timescale to probe our system with compared to seconds or years.\\\\
+In order to make use of this, we need to scale equation \eqref{eq:newton} in these units, specifically $G$. Rewriting equation \eqref{eq:t_coll} gives us
+\begin{align*}
+  G = \frac{3\pi}{32\rho_0t_{\text{coll}}^2}
+  \intertext{Scaling so that we are looking at timescales of order $t_{\text{coll}}$, and inserting $\rho_0 = 4/3\pi R_0^3$}
+  G &= \frac{\pi^2R_0^3}{8M_{tot}} = \frac{\pi^2R_0^3}{8N\mu} \numberthis\label{eq:G}
+\end{align*}
+where $N$ is the number of particles, and $\mu$ is the average mass (in solar masses) per particle.\\\\
+Inserting equation \eqref{eq:G} into the differential equation \eqref{eq:diff_eq} gives us the units $[\text{ly}/t_{\text{coll}}]$, which is what we wanted.
+%Page 18ish in cosmo1.5 lecture notes\\
+%collapse time, spherical top hat model, virialization.
+%Sphere completely collapses at $\theta = 2\pi$ \red{add image maybe?}
 
+\subsubsection{Numerical instabilities}
+try to find fitting size order from mean particle distance and refer to article
 \subsubsection{Particle ejection}
 
 \subsubsection{Virial theorem}
