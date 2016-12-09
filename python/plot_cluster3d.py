@@ -1,7 +1,7 @@
 from plot_cluster import *
 from mpl_toolkits.mplot3d import Axes3D
 
-filename = '../benchmarks/pos_N152_dt0.010000_tcoll_1.000000_eps0.000000.xyz'
+filename = '../benchmarks/pos_N200_dt0.001000_tcoll_5.000000_eps0.500000.xyz'
 pos, mass, potential, kinetic = read_file(filename)
 
 fig3d = figure()
@@ -23,5 +23,5 @@ for time in range(max_time):
 
     fig3d.savefig('../figures/Eirik_plot_%3d.png'%time)
 
-#import subprocess
-#subprocess.call('convert -delay 8 -loop 0 ../figures/Eirik_plot_*.png ../figures/anim3d_long.gif', shell=True)
+import subprocess
+subprocess.call('convert -delay 8 -loop 0 ../figures/Eirik_plot_*.png ../figures/anim3d_long.gif', shell=True)

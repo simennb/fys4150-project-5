@@ -55,7 +55,10 @@ int main(int argc, char *argv[])
     if (argc<5)
     {
         cout<<"Usage: "<<argv[0]<<" N"<<" t_coll"<<" dt"<<" eps"<<endl;
-        // add explanation of the different parameters
+        cout << "N sets the number of stars in our galactic cluster" << endl;
+        cout << "Number of collision times we run the simulation" << endl; //Can this be formulated better?
+        cout << "dt is the time step used" << endl;
+        cout << "eps is the value of the smoothing factor in the force calculation. Should be set to a small value." << endl;
         exit(1);
     }
     int N  = atoi(argv[1]);           // number of objects
@@ -67,6 +70,7 @@ int main(int argc, char *argv[])
 
     // Initializing filename and determining how often we want to write to file
     string filename = "../benchmarks/pos_N"+to_string(N)+"_dt"+to_string(dt)+"_tcoll_"+to_string(t_coll)+"_eps"+to_string(eps)+".xyz";
+    string filenameEnergy = "../benchmarks/energy_N"+to_string(N)+"_dt"+to_string(dt)+"_tcoll_"+to_string(t_coll)+"_eps"+to_string(eps)+".xyz";
     int numfilesteps = 100;  // max number of steps we write to file, might change later
     int iter = 1;
     if (numsteps>numfilesteps) iter = numsteps/numfilesteps;
@@ -89,7 +93,10 @@ int main(int argc, char *argv[])
 
     // Integration loop
     Integrator integrator(dt);
-    galacticCluster.writeToFile(filename);
+    galacticCluster.writeToFilePerParticle(filename);
+    galacticCluster.writeToFileEnergyPerTime(filenameEnergy);
+    galacticCluster.writeToFilePerParticle(filename);
+    galacticCluster.writeToFileEnergyPerTime(filenameEnergy);
     for (int step=0; step<numsteps; step++)
     {
         integrator.integrateOneStep(galacticCluster);
@@ -101,7 +108,8 @@ int main(int argc, char *argv[])
         if (step%iter == 0)
         {
             galacticCluster.calculateEnergyPerParticle();
-            galacticCluster.writeToFile(filename);  // only write to file every iter steps
+            galacticCluster.writeToFilePerParticle(filename);  // only write to file every iter steps
+            galacticCluster.writeToFileEnergyPerTime(filenameEnergy);
         }
     }
     return 0;
