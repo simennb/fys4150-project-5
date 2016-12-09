@@ -142,7 +142,7 @@ if sys.argv[1] == "c":
         #plt.legend(loc = 'best')
 
         plt.subplot(3,1,3)
-        plt.plot(x, kinP/counterarray/N[i], label = 'Kinetic energy of escaped particles')
+        plt.plot(x, kinP, label = 'Kinetic energy of escaped particles')
         plt.ylabel(r'K$^{P}$', fontsize = 20)
         plt.xlabel('Time', fontsize = 18)
         plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
@@ -154,7 +154,7 @@ if sys.argv[1] == "c":
 ####            Task d            ####
 ######################################
 
-if sys.argv[1] == "d":
+if sys.argv[1] == "d1":
     N = [200, 200, 200, 200, 200, 200]
     dt = [0.001, 0.001, 0.001, 0.001, 0.001, 0.001]
     tcoll = [5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
@@ -182,6 +182,38 @@ if sys.argv[1] == "d":
         plt.savefig("../figures/taskd/totenergy_eps%1.2e_N%d.png" %(eps[i], N[i]))
         #plt.show()
 
+if sys.argv[1] == "d2":
+    N = [100, 200, 300, 400, 500, 600, 1000]
+    dt = 0.001
+    tcoll = 5.0
+    eps = 0.1
+    eqtime = 75
+
+    for i in range(0, len(N)):
+        m_totEnergy, x, counterarray, viral, kinP, kinTot, kinN, pos = energyfinder(N[i], dt, tcoll, eps, eqtime)
+        plt.figure(figsize = (9,10))
+        plt.subplot(3,1,1)
+        plt.plot(x, m_totEnergy)
+        plt.title(r'%d particles' %(N[i]), fontsize = 18)
+        #plt.xlabel("Time", fontsize = 18)
+        plt.ylabel("Energy", fontsize = 18)
+        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+
+        plt.subplot(3,1,2)
+        plt.plot(x, counterarray/N[i], label = 'Fraction of particles with positive total energy')
+        #plt.title('Fraction of particles with positive total energy', fontsize = 18)
+        plt.ylabel(r'f$^{p}$', fontsize = 24)
+        #plt.xlabel('Time', fontsize = 18)
+        #plt.legend(loc = 'best')
+
+        plt.subplot(3,1,3)
+        plt.plot(x, kinP, label = 'Kinetic energy of escaped particles')
+        plt.ylabel(r'K$^{P}$', fontsize = 20)
+        plt.xlabel('Time', fontsize = 18)
+        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+        plt.savefig("../figures/taskd/totenergy_N%d.png" %(N[i]))
+        plt.show()
+        
 ######################################
 ####            Task e            ####
 ######################################

@@ -277,8 +277,33 @@ Once all the positions and masses have been set, we can find the forces acting b
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task b        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-A simulation of N = 100 stars over a time of 4 collision times with a time step of 0.001 and eps set to 0 gives us the animation found in \husk{REF!}. From this animation we can see that we don't reach an equilibrium. \husk{Is this correct?}
-\\ \\
+A simulation for N = 100 particles over a time of 5 collision times with a time step of 0.001 and no smoothing factor is plotted in figure \ref{fig:noepsmuchtime} for different times during the simulation. From these figures and the figure \ref{fig:noeps} we can see that without a smoothing factor we will never reach an equilibrium.
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskb/N100/plot_N100_time0.00}.png}
+	\caption{At time 0.00 collision times}
+	\label{subfig:noepsmuchtime1}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskb/N100/plot_N100_time26.00}.png}
+	\caption{At time 1.29 collision times}
+	\label{subfig:noepsmuchtime2}
+\end{subfigure}
+\qquad
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskb/N100/plot_N100_time74.00}.png}
+	\caption{At time 3.66 collision times}
+	\label{subfig:noepsmuchtime3}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskb/N100/plot_N100_time100.00}.png}
+	\caption{At time 4.95 collision times}
+	\label{subfig:noepsmuchtime4}
+\end{subfigure}
+\caption{Position of each star in 2D as a function of time.}
+\label{fig:noepsmuchtime}
+\end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task c        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -286,6 +311,11 @@ Letting our program run for different number of particles we found the total ene
 
 \begin{figure}[H]
 \centering
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskc/totenergy_N100}.png}
+	\caption{Number of particles: 100}
+	\label{subfig:noeps100}
+\end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 	\includegraphics[scale=0.33]{{../figures/taskc/totenergy_N200}.png}
 	\caption{Number of particles: 200}
@@ -302,7 +332,7 @@ Letting our program run for different number of particles we found the total ene
 	\caption{Number of particles: 1000}
 	\label{subfig:noeps1000}
 \end{subfigure}
-\caption{Total energy and fraction of particles with positive total energy for different number of particles.}
+\caption{Total energy and fraction of particles with positive total energy for different number of particles without a smoothing factor.}
 \label{fig:noeps}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -330,7 +360,33 @@ To find the best smoothing factor discussed above in the theory we used the tria
 \caption{Total energy and fraction of particles with positive total energy for different smoothing factors for a simulation of 200 stars.}
 \label{fig:totalEnergy}
 \end{figure}
-
+As we now have found a better smoothing factor we can once again simulate for different number of particles and see the difference. By setting a smoothing factor of 0.1 and simulating for different number of particles with time step 0.001 and over a time period of 5 collisions times the graphs in figure \ref{fig:eps}:
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_N100}.png}
+	\caption{Number of particles: 100}
+	\label{subfig:noeps100}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_N200}.png}
+	\caption{Number of particles: 200}
+	\label{subfig:noeps200}
+\end{subfigure}
+\qquad
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_N500}.png}
+	\caption{Number of particles: 500}
+	\label{subfig:noeps500}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_N1000}.png}
+	\caption{Number of particles: 1000}
+	\label{subfig:noeps1000}
+\end{subfigure}
+\caption{Total energy and fraction of particles with positive total energy for different number of particles with a smoothing factor.}
+\label{fig:noeps}
+\end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task e        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,7 +1,7 @@
 from plot_cluster import *
 from mpl_toolkits.mplot3d import Axes3D
 
-filename = '../benchmarks/pos_N200_dt0.001000_tcoll_5.000000_eps0.500000.xyz'
+filename = '../benchmarks/pos_N1000_dt0.001000_tcoll_5.000000_eps0.100000.xyz'
 pos, mass, potential, kinetic = read_file(filename)
 
 fig3d = figure()
@@ -16,7 +16,7 @@ for time in range(max_time):
     ax3d.set_xlabel('x [ly]',size=15)
     ax3d.set_ylabel('y [ly]',size=15)
     ax3d.set_zlabel('z [ly]',size=15)
-    ax3d.set_title('Open cluster, t = %.1f t_coll'%(time/float(max_time)*10),size=15)
+    ax3d.set_title('Open cluster, t = %.1f t_coll'%(time/float(max_time)*5),size=15)
     ax3d.set_xlim([-22,22])
     ax3d.set_ylim([-22,22])
     ax3d.set_zlim([-22,22])
@@ -25,3 +25,4 @@ for time in range(max_time):
 
 import subprocess
 subprocess.call('convert -delay 8 -loop 0 ../figures/Eirik_plot_*.png ../figures/anim3d_long.gif', shell=True)
+
