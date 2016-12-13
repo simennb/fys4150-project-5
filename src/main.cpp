@@ -13,41 +13,6 @@
 
 using namespace std;
 
-/* TODO:
- * - cmd-arguments: N, R0?, M0?, dt, eps, numsteps             semi DONE
- * - dr^3 + eps^2*dr, check if correct in situation
- * - fix gravitational constant G.
- * - remove method dependence in integrator?                        DONE
- * - fix why file initialization doesnt work first call
- * - should write masses to file somehow                            DONE
- * - Should we have task structure? if so, how would we set it up?
- * - particles ejected
- * - atm initializing in a cube of R0^3 volume, not sphere
- *
- * Tasks:
- *  a) extend code from 3, need to find G in these units! so some math
- *    - add function to galacticcluster to determine G after adding all bodies?
- *    - find t_coll
- *  b) run system for a few t_coll, check for equilibrium time
- *  c) calculate kinetic and potential energy of the system, check conservation
- *    - check ejection from system, and its dependence on N
- *  d) add smoothing factor, try different values for energy conservation
- *    - compare with previous results
- *  e) test of virial theorem
- *  f) density of particles, mostly not c++ related
- *
- * Questions:
- *  - should mu = Mmean just be M0? Or is it important to calculate it more precisely?
- *  - rng inside galacticcluster::createcelestialbody, or just in main?
- *
- * Potential task structure:
- *  b) Runs program with just storing positions (and masses) to file
- *  c) Runs with checks for potential and kinetic energy. Calculates energy removed by ejection
- *  - both b) and c) can be run to check for the effects of varying eps, so don't need unique for that one?
- *  e) virial theorem, do we need to do anything in c++?
- *  f) density, can use b) since we write masses to file there? Yeah, python plotting and running b for various N
- */
-
 vec3 to_cart(double r, double theta, double phi, int limits);
 
 int main(int argc, char *argv[])
@@ -93,10 +58,13 @@ int main(int argc, char *argv[])
 
     // Integration loop
     Integrator integrator(dt);
+    
+    // Writing the first values to file. Doubled up due to the file opening method not working on first call for unknown reason.
     galacticCluster.writeToFilePerParticle(filename);
     galacticCluster.writeToFileEnergyPerTime(filenameEnergy);
     galacticCluster.writeToFilePerParticle(filename);
     galacticCluster.writeToFileEnergyPerTime(filenameEnergy);
+    
     for (int step=0; step<numsteps; step++)
     {
         integrator.integrateOneStep(galacticCluster);
