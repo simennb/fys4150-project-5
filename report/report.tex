@@ -212,7 +212,7 @@ Since we will be solving the system numerically, we have to be aware of some of 
 \begin{align*}
   F_{\text{mod}} &= \frac{GM_1M_2}{r^2 + \varepsilon^2} \numberthis\label{eq:newton_mod}
 \end{align*}
-where $\varepsilon$ is a small real constant that causes equation \eqref{eq:newton_mod} to be finite on short length scales. While adding this smoothing factor smoothes out the instabilities, it also means that on length scales smaller than $\varepsilon$, the trajectories are not integrated accurately. This means that we should make sure to set the smoothing factor $\varepsilon$ to a length so that 1) instabilities are smoothed out, and 2) the inaccuracy in the trajectory does not play a significant part of the macroscopic evolution of the system.\\\\
+where $\varepsilon$ is a small real constant that causes equation \eqref{eq:newton_mod} to be finite on short length scales. While adding this smoothing factor smooths out the instabilities, it also means that on length scales smaller than $\varepsilon$, the trajectories are not integrated accurately. This means that we should make sure to set the smoothing factor $\varepsilon$ to a length so that 1) instabilities are smoothed out, and 2) the inaccuracy in the trajectory does not play a significant part of the macroscopic evolution of the system.\\\\
 As we discussed earlier, we assume the system to be collisionless, and that collisions (or close encounters) should not affect the system much. Since our particles does not represent point particles, but mass distributions with some finite radius, a really close encounter between two particles might not be fully collisionless. The smoothing factor does then in a sense represent the fact that our system is not fully collisionless, but the magnitude of it is most likely considerably larger than the scale at which collisions become relevant.\\\\
 Finding an ideal size for $\varepsilon$ can be difficult. A simple way to evaluate this is to first find the mean interparticle distance. \red{cite Joyce full}
 \begin{align*}
@@ -332,13 +332,13 @@ Letting our program run for different number of particles we found the total ene
 	\caption{Number of particles: 1000}
 	\label{subfig:noeps1000}
 \end{subfigure}
-\caption{Total energy and fraction of particles with positive total energy for different number of particles without a smoothing factor.}
+\caption{Total energy (top), fraction of escaped particels (middle) and the kinetic energy of the escaped partivles (bottom) for different number of particles without a smoothing factor.}
 \label{fig:noeps}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task d        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-To find the best smoothing factor discussed above in the theory we used the trial and error method. For 200 stars with a time step of 0.001 and a time from 0 to 5 collision times we found the total energy as presented in figure \husk{fig:totalEnergy}
+To find the best smoothing factor discussed above in the theory we used the trial and error method. For 200 stars with a time step of 0.001 and a time from 0 to 5 collision times we found the total energy as presented in figure \ref{fig:totalEnergy}
 \begin{figure}[H]
 \centering
 \begin{subfigure}{0.49\textwidth}
@@ -357,40 +357,40 @@ To find the best smoothing factor discussed above in the theory we used the tria
 	\caption{$\epsilon$ = 0.02}
 	\label{subfig:eps0.02}
 \end{subfigure}
-\caption{Total energy and fraction of particles with positive total energy for different smoothing factors for a simulation of 200 stars.}
+\caption{Total energy (top) and fraction escaped particles (bottom) for different smoothing factors for a simulation of 200 particles.}
 \label{fig:totalEnergy}
 \end{figure}
-As we now have found a better smoothing factor we can once again simulate for different number of particles and see the difference. By setting a smoothing factor of 0.1 and simulating for different number of particles with time step 0.001 and over a time period of 5 collisions times the graphs in figure \ref{fig:eps}:
+As we now have found a better smoothing factor we can once again simulate for different number of particles and see the difference. By setting a smoothing factor of 0.1 and simulating for different number of particles with time step 0.001 and over a time period of 5 collisions times the graphs in figure \ref{fig:witheps}:
 \begin{figure}[H]
 \centering
 \begin{subfigure}{0.49\textwidth}
 	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_N100}.png}
 	\caption{Number of particles: 100}
-	\label{subfig:noeps100}
+	\label{subfig:witheps100}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_N200}.png}
 	\caption{Number of particles: 200}
-	\label{subfig:noeps200}
+	\label{subfig:witheps200}
 \end{subfigure}
 \qquad
 \begin{subfigure}{0.49\textwidth}
 	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_N500}.png}
 	\caption{Number of particles: 500}
-	\label{subfig:noeps500}
+	\label{subfig:witheps500}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 	\includegraphics[scale=0.33]{{../figures/taskd/totenergy_N1000}.png}
 	\caption{Number of particles: 1000}
-	\label{subfig:noeps1000}
+	\label{subfig:witheps1000}
 \end{subfigure}
-\caption{Total energy and fraction of particles with positive total energy for different number of particles with a smoothing factor.}
-\label{fig:noeps}
+\caption{Total energy (top), fraction of escaped particels (middle) and the kinetic energy of the escaped partivles (bottom) for different number of particles with a smoothing factor.}
+\label{fig:witheps}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task e        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-To see if we our results were consisten with the viral theorem, we checked if the average of the potential energy subtracted from two times the average of the bound particles kinetic energy  was zero. The result are plotted in figure \ref{fig:viral}
+To see if we our results were consisten with the viral theorem, we checked if equation \eqref{eq:virial2} held for our system. The result are plotted in figure \ref{fig:viral}
 \begin{figure}[H]
 \centering
 \begin{subfigure}{0.49\textwidth}
@@ -409,7 +409,7 @@ To see if we our results were consisten with the viral theorem, we checked if th
 	\caption{Number of particles: 500}
 	\label{subfig:viral500}
 \end{subfigure}
-\caption{Total energy for different smoothing factors for a simulation of 200 stars.}
+\caption{Test of the viral theorem. When the blue and black line crosses, we have fullfilled the viral theorem. The energies are the average of a large system.}
 \label{fig:viral}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -447,7 +447,9 @@ By simulating different number of particles with the same total mass we were abl
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task a        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+Choice of time step was done by trial and error. From the extended report \husk{cite Joyce full} we found that they had used a time step of 1.0e-05, but had a smaller radius. We tried different values and found that 1.0e-03 was a good time step which both gave us a good resolution while also keeping the time usage of the program low. \\ \\
+In the limit $N \rightarrow \, \infty$ with a constant $\rho$ we get a continuous fluid. The system should then collapse into a singularity after one $t_{coll}$. However, we do not observe this collapse in our simulation. This is because we neglect collisions and our particles are not uniformly distributed. With random distribution there will be many particles that do not go through the center, and even if they did there would be nothing there to stop it as it can not collide.
+\\ \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task b        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -455,15 +457,22 @@ By simulating different number of particles with the same total mass we were abl
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task c        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+As we can see from figure \ref{fig:noeps} the energy is never conserved nor is it stable and there is no point in discussing these plots in detail. The plots in figure \ref{fig:witheps} however are much more interesting and we are especially interested in the middle and bottom ones for each simulation. Number of particles escaping and the kinetic energy of these particles are found using equation \eqref{eq:ejection} and we notice two trends. As the number of particles increases there seem to be a larger fraction of escaping particles. This is true up until 500 particles, but the fraction is a bit lower at 1000. The cause of this might either be that there are abnormalities in our measurements, this could easily be corrected by doing the siumulation many times and the take an average, or it could be because the fraction increases for low values of N and then it is more constant for larger values of N. By looking at the energy of the escaped particles we see a different story. Max values of each simulation at the equilibrium time (see below) seem to decrease as there are more particles added to the system. This means that with more particles, even though more are escaping, the once that do escape has a lower kinetic energy per particle. \\
+Once the system reaches equilibrium there are still some particles being ejected, as seen from the fraction of particles escaping, but this fraction becomes more and more stable for larger values of N. \\
+The system seems in general to be more stable for larger values of N. If we were to do this experiment again we would likely use larger N-values and do multiple simulations for each N-value. This time around however, we had exams in a lot of other courses and had only time for the simulations we have run.
+\\ \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task d        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+One of the assumptions we have made is that we don't have any collisions between the particles. To correct for this the smoothing factor was implemented to our force calculations as shown in \eqref{eq:newton_mod}. The ideal value for the smoothing factor is a factor that is difficult to pinpoint. However, we would like it to be a couple of factors lower than the mean interparticle distance given by equation \eqref{eq:mean_dist}. As we can see from the figures in \ref{fig:noeps} there were several values tried out for N = 200 which would have a mean interparticle distance of 3.42 light years. The value $\epsilon = $ 0.02 was clearly the worst. With no stabilization in the escaped particles and a total energy showing a increase rather than being stable, the value could not be used. $\epsilon = 0.2$ and $\epsilon = 2.0$ both show a stabilizing effect. The oscillation of the fraction of high energy particles for $\epsilon = 0.2$ could be a result of particles on the borderline of escaping, going back and fort. If we did this project again I would like to do this for even more values of N, finding a better way to determine $\epsilon$ and find the reason for the oscillating. \\
+With a knwon vaue of $\epsilon$ for 200 N we redid the results from earlier tasks. The challange here was to estimate a value of $\epsilon$ for every N. As we only knew it should become smaller with larger N and that for 0.2 was good for 200, we set the value to 0.1 before simulating 100, 200, 500 and 1000 particles. Ideally every values of N should have its own $\epsilon$, but since we only know that it should be less than the mean interparticle distance and 0.2 worked for 200, we thought that 0.1 would be a good estimation for all these N-values, even though it is probably better for larger values of N. If we were to do this project again, it would be wise to find individual $\epsilon$ by comparing different values as in figure \ref{fig:noeps}, but as our results are not used any further, our estimation seems to be a good one. \\
+These figures shows us that with a smoothing factor we can reach an equilibrium which differs in time for the different values of N that are placed randomly within the same volume and with the same total mass. By looking at the fraction of particles with positive energy, there seems to be an equilibrium at around 1 $t_{coll}$ for 100 particles, 1.6 $t_{coll}$ for 200, 2.5 $t_{coll}$ for 500 and 3.5 $t_{coll}$ for 1000 particles. This increase in equilibrium time is a bit weird as one would expect the equilibrium time to go to one as we increase the number of particles. The fact that we observe the oposite shows us that something is wrong, but we have not been able to see what. Once again we realize that if we were to do this again, the increasing equilibrium time is definetly something we should correct.\\
+The bottom part of the three plots for each N-values shows us the energy of the escaped particles. We notice that once equilibrium is reached there is a "smooth" decrease in kinetic energy which goes as a function of 1 over something squared. This something is probably the distance $r$ which tells us that once the particles have escaped they will have a decrease in kinetic energy inversly proportional with distance squared. \\ \\
+The addition of the smoothing factor can be justified to some extent, as discussed in the theory, by the fact that we do not look at point particles and we do not simulate collisions between the particles. This will not give a perfect simulation, but for our purposes in this project the corrections are a good estimation. \\ \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task e        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+From figure \ref{fig:viral} the viral theorem fits better and better for higher values of N. This makes sense as a larger N will bring us closer to the expectation value of kinetic and potential energy. The difference from zero is however to large to ignore, at least for N = 100. This means that the viral theorem is almost true in our system, but not quite and especially not for a small number particles. It should be true once the system is in equilibrium and we can't find the reason why. It might be the way we extract the energy for bound particles, it might be that we have a fault in our simulation or it might be that the smoothing factor is not ideal. If we were to do the experiment again we would look into more into this and see if we could improve the viral theorem. But as the other parts of our program makes sense and our viral theorem test improves for larger values of N, it is reasonable to argue that we have something that works, but it is not ideal for small N or that our energy is either extracted wrong or manipulated wrong by our calculations.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task f        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
