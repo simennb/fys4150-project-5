@@ -483,5 +483,8 @@ From figure \ref{fig:viral} the viral theorem fits better and better for higher 
 As we can see from figure \ref{fig:radialDens} the cluster is densest near origo. This is as expected 
 
 \subsection{Conclusion}
+In the end we found that a time step of $dt = 0.001$ was a good time step. Our simulation was not stable before we added a smoothing factor and this factor was found through trial and error to be good as 0.2 for N = 200  and 0.1 for N = 1000. With a smoothing factor we could look at total energy stability, fraction of particles escaping and the kinetic energy of these particles. We found that the energy was stable for all our values of N, that the fraction of particles escaping to some degree increased with increasing N although it went down again for N = 1000. The kinetic energy of the escaped particles decreased with increasing N meaning that even though a bigger fraction escaped, they had less energy with them. \\
+The virial theorem was seen to be increasingly better fullfilled for a system in equilibrium for increasing N, this is because we used the average over a large system, whos validity increases with increasing N, instead of time average. \\
+Our results were found to mostly be coinciding with those presented by M. Joyce and his co-workers \cite{Joyce}, \cite{JoyceFull}.
 \bibliography{references}
 \end{document}
