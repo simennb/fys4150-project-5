@@ -59,9 +59,9 @@ for i in range(0, len(N)):
     radii, number_density, mass_density, meanr, stdr, mass = radDist(N[i], dt, tcoll, eps)
     meanr_array[i] = meanr
     stdr_array[i] = stdr
-    
-    plt.figure(figsize = (9,7))
-    n, bins, patches = plt.hist(radii[:-1], bins = radii, weights = number_density, normed = True)
+    """
+    #plt.figure(figsize = (9,7))
+    #n, bins, patches = plt.hist(radii[:-1], bins = radii, weights = number_density, normed = True)
 
     # Least squares method searching for r0
     n0 = max(n)
@@ -75,7 +75,7 @@ for i in range(0, len(N)):
     min_index = np.argmin(n_sums)
     r0real *= alpha[min_index]
 
-    plt.plot(bins+bins[np.argmax(n)], nnn(bins, r0real, n0),'k',lw=3)
+    #plt.plot(bins+bins[np.argmax(n)], nnn(bins, r0real, n0),'k',lw=3)
     plt.title('Number density per radii for %d particles' %N[i], fontsize = 18)
     plt.xlabel('Radius [light years]', fontsize = 18)
     plt.ylabel('Number density [1/ly^3]', fontsize = 18)
@@ -84,7 +84,7 @@ for i in range(0, len(N)):
 
     ############################### Mass density
     plt.figure(figsize = (9,7))
-    n, bins, patches = plt.hist(radii[:-1], bins = radii, weights = mass_density, normed = True)
+    #n, bins, patches = plt.hist(radii[:-1], bins = radii, weights = mass_density, normed = True)
 
     # Least squares method searching for r0
     p0 = sum(mass)/(4./3*np.pi*radii[-1]**3)
@@ -104,16 +104,16 @@ for i in range(0, len(N)):
     plt.xlabel('Radius [light years]', fontsize = 18)
     plt.ylabel('Mass density [M_sun/ly^3]', fontsize = 18)
     plt.xlim([0,10])
-    plt.savefig("../figures/taskf/massDens_N%d.png" %N[i])
+    #plt.savefig("../figures/taskf/massDens_N%d.png" %N[i])
 
     if len(sys.argv) > 1 and sys.argv[1] == "show":
         plt.show()
+    """
 
-'''
 ylog = np.log(meanr_array)
 
 first = np.polyfit(N, meanr_array, 1)
-second = np.polyfit(N, 1./meanr_array, 2)
+second = np.polyfit(N, 1./meanr_array, 3)
 exponential = np.polyfit(N, ylog, 1)
 
 x = np.linspace(1, N[-1] + 100, 1000)
@@ -126,7 +126,7 @@ yexponential = np.polyval(exponential, x)
 ylog2 = np.log(stdr_array)
 
 first2 = np.polyfit(N, stdr_array, 1)
-second2 = np.polyfit(N, 1./stdr_array, 2)
+second2 = np.polyfit(N, 1./stdr_array, 3)
 exponential2 = np.polyfit(N, ylog, 1)
 
 yfirst2 = np.polyval(first2, x)
@@ -135,7 +135,7 @@ yexponential2 = np.polyval(exponential2, x)
 
 
 plt.figure(3, figsize = (9,7))
-plt.plot(N, meanr_array, '*', label = 'Mean r')
+plt.plot(np.array(N), meanr_array, '*', label = 'Mean r')
 plt.plot(x, 1/ysecond, '-k',label = 'Second order inverse fit for mean')
 plt.plot(N, stdr_array, 'o', label = 'std(r)')
 plt.plot(x, 1/ysecond2, label = 'Second order inverse fit for std')
@@ -145,4 +145,4 @@ plt.xlabel('Number of particles', fontsize = 18)
 plt.title('Mean radius and standard deviation as a function of N', fontsize = 18)
 plt.savefig('../figures/taskf/meanstd.png')
 plt.show()
-'''
+
