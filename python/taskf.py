@@ -36,12 +36,12 @@ def radDist(N, dt, tcoll, eps):
                 mass_density[i] += mass[j]
                 number_density[i] += 1
 
-    return radii, number_density, mass_density, np.mean(r), np.std(r)
+    return radii, number_density/dV, mass_density/dV, np.mean(r), np.std(r)
 
 def nnn(r, r0, n0):
     return n0/(1 + (r/float(r0))**4)
 
-def ppp(r, p0, r0):
+def ppp(r, r0, p0):
     return p0/(r/float(r0)*(1 + (r/r0))**2)
 
 N = [100, 200, 300, 400, 500, 600, 1000]
@@ -50,8 +50,8 @@ tcoll = 5.0
 eps = 0.1
 eqtime = -1
 
-n0 = np.linspace(0.01, 100, 100)
-r0 = np.linspace(0.01, 1, 100)
+#n0 = np.linspace(0.01, 100, 100)
+r0 = np.linspace(0.0001, 0.02000000, 10)
 
 meanr_array = np.zeros(len(N))
 stdr_array = np.zeros(len(N))
@@ -65,16 +65,15 @@ for i in range(0, len(N)):
     n, bins, patches = plt.hist(radii[:-1], bins = radii, weights = number_density, normed = True)
 
     minvalue = 10000000000
-    n0real = 0
+    j = max(n)
     r0real = 0
-    #for j in n0:
-    #    for k in r0:
-    #        n_array = nnn(bins, j, k)
-    #
-    #        if sum((n_array[:-1] - n)**2) < minvalue:
-    #            n0real = i
-    #            r0real = j
-    #            minvalue = sum((n_array[:-1] - n)**2)
+    for k in r0:
+        n_array = nnn(bins, k, j)
+        print n_array
+    
+        if sum((n_array[:-1] - n)**2) < minvalue:
+            r0real = j
+            minvalue = sum((n_array[:-1] - n)**2)
             
 
     #print n, bins
@@ -82,7 +81,8 @@ for i in range(0, len(N)):
     #n, bins, patches = plt.hist(radii[:-1], bins = radii, weights = mass_density)
     
     #plt.figure(figsize = (9, 7))
-    #plt.plot(bins, nnn(bins, max(n), 0.45), '-k', lw = 2 ,label = 'n(r)')
+    #plt.plot(bins, nnn(bins, 1/N[i] ** 0.33, max(n)), '-k', lw = 2 ,label = 'n(r)')
+    plt.plot(bins, nnn(bins, r0real, max(n)))
     #plt.plot(radii, ppp(radii, 1, N[i]**(-1/float(3))), label = r'$\rho$(r)')
     plt.title('Number of particles per radii for %d particles' %N[i], fontsize = 18)
     plt.xlabel('Radius [light years]', fontsize = 18)
