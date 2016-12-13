@@ -136,18 +136,17 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.5]{totoro.jpg}
-\end{figure}
+The aim of this project is to simulate a cold collapse with gravitational $N$-body simulations as descirbed by M. Joyce and co-workers in their article \cite{Joyce}. By using the collapse time as the time unit, we will simulate N particles, in our case stars, starting with negativ total energy and no velocity. Using only the gravitational force we will find that our simulation is never stabilized, thus we will implement a smoothing factor $\varepsilon$ which must be found by trial and error. Once the system is stabilized we will look at energy conservation, fraction of partiles escaping (i.e. achieves a positive total energy) and the kinetic energy of the escaped particles. We will also see if the virial theorem is valid for our and system and plot the radial density and try to fit equation \eqref{eq:radial_dist} to the data. Lastly we will find the mean radius and the standard deviation of the radius for different number of particles. \\
+The results showed us that 
 \end{abstract}
 \subsection{Introduction}
-In this project we will attempt to develop code that can be used for gravitational $N$-body simulations. Taking inspiration from an article by M. Joyce and co-workers \red{cite}, we will build a simple model of an open galactic cluster.
+In this project we will attempt to develop code that can be used for gravitational $N$-body simulations. Taking inspiration from an article by M. Joyce and co-workers \cite{Joyce}, we will build a simple model of an open galactic cluster.
 \\\\
-An open cluster is a group consisting of up to a few thousand gravitationally bound stars, created from the collapse of a molecular cloud, and are usually found in the arms of spiral galaxies or in in irregular galaxies. The collapse of the cloud leads to a burst of star formation. As the stars of the cluster are of similar age and chemical composition, they are very import objects in the study of stellar evolution. Once formed, they gradually dissipate as members are ejected due to random interactions with other clusters, clouds of gas, or internal collisions.
+An open cluster is a group consisting of up to a few thousand gravitationally bound stars, created from the collapse of a molecular cloud, and are usually found in the arms of spiral galaxies or in in irregular galaxies. The collapse of the cloud leads to a burst of star formation. As the stars of the cluster are of similar age and chemical composition, they are very important objects in the study of stellar evolution. Once formed, they gradually dissipate as members are ejected due to random interactions with other clusters, clouds of gas, or internal collisions. \\ \\
+Since these stars are of such importance, it is of great astrophysical use to be able to simulate this model. This is also a N-body problem. For a physicist, the ability to be able to simulate N bodies is enormously useful as it is applicable within many different fields of physics. Thus we have two main reasons to do this project. Generally it is useful to learn how to perform N-body simulations, and more specifically, in astrophysics it is useful to look at this specific N-body problem.
+\husk{Add examples of where we use N-body simulations}
 \\\\
-First, we look at some of the physics behind our model, making sure to find ideal units to fit our timescale. Running our model for $N = 100$ particles, we check the stability of our system, and find an ideal smoothing function for the gravitational force to remove some of the numerical instabilities. Having done that, we check how long the system takes to stabilize, conservation of energy, and checking the fraction of particles ejected from the system. Looking at only the bound particles, we can check if our results are consistent with the virial theorem.
-\red{write motivation for why N body simulations}
+First, we look at some of the physics behind our model, making sure to find ideal units to fit our timescale. Running our model for $N = 100$ particles, we check the stability of our system, and then find an ideal smoothing function for the gravitational force to remove some of the numerical instabilities. Having done that, we check how long the system takes to stabilize, conservation of energy, and checking the fraction of particles ejected from the system. Looking at only the bound particles, we can check if our results are consistent with the virial theorem.
 \\\\
 Finally, we increase the number of particles while keeping the total mass constant, to see how the radial density looks like. This can then be compared to well known profiles such as the Navarro-Frenk-White profile.
 
@@ -156,16 +155,16 @@ Finally, we increase the number of particles while keeping the total mass consta
 \subsubsection{N-body simulation}
 In order to make our model of an open cluster, we will first look at some of the assumptions we make.
 \begin{itemize}
-  \item Consists of $N$ separate particles only interacting with each other via the Newtonian gravitational force. The force between two particles are then
+  \item The cluster consists of $N$ separate particles only interacting with each other via the Newtonian gravitational force. The force between two particles are then
     \begin{align*}
       F_G = -\frac{G M_1, M_2}{r^2}\numberthis\label{eq:newton}
     \end{align*}
-    where $G$ is the gravitational constant, $r$ is the distance between the particles, and $M_1$, $M_2$ is the mass of the particles. For most of the project, we will be looking at $N=100$ particles.
+    where $G$ is the gravitational constant, $r$ is the distance between the particles, and $M_1$, $M_2$ is the mass of the particles.
   \item Since the only interaction is the gravitational force, the system is collisionless. If the probability of interactions between particles is low, then collisions have no significant effect on the results. For very large $N$, this might not hold as well.
   \item The particles start with little or no initial velocity, so-called \textit{cold collapse}.
   \item The particles are uniformly distributed within a sphere of radius $R_0 = 20$ ly. Masses are randomly distributed by a Gaussian distribution around $10\,M_{\odot}$ with a deviation of one solar mass.
 \end{itemize}
-Earlier this fall, we made a model of our solar system. \red{cite report 3} We recall that for a system only affected by Newtonian gravity, Newton's second law of motion gives us the following differential equations for particle $i$
+Earlier this fall, we made a model of our solar system. \cite{Github3} We recall that for a system only affected by Newtonian gravity, Newton's second law of motion gives us the following differential equations for particle $i$
 \begin{align*}
   \frac{d^2\mathbf{r_i}}{dt^2} &= \sum\limits_{j\neq i}\frac{F_G(\mathbf{r}_{ij}, M_i,M_j)}{M_i}\numberthis\label{eq:diff_eq}
 \end{align*}
@@ -174,7 +173,7 @@ For the length scale, we can use lightyears, as the particles are initially unif
 % def metal():
 
 \subsubsection{The spherical top-hat model}
-While solving non-linear perturbation theory analytically can be difficult (or impossible), there does exists an analytical solution for the so-called ``\textit{spherical top-hat}'' model \red{cite cosmo notes}. In this model, we look at a spherical perturbation of radius $R$, with a uniform density inside. It can be shown that this model has a parametrised solution
+While solving non-linear perturbation theory analytically can be difficult (or impossible), there does exists an analytical solution for the so-called ``\textit{spherical top-hat}'' model \cite{Lecture}. In this model, we look at a spherical perturbation of radius $R$, with a uniform density inside. It can be shown that this model has a parametrised solution
 \begin{align*}
   R &= A(1-\cos\theta)\numberthis\label{eq:top-hat}\\
   t &= B(\theta-\sin\theta)\\
@@ -219,7 +218,7 @@ Since we will be solving the system numerically, we have to be aware of some of 
 \end{align*}
 where $\varepsilon$ is a small real constant that causes equation \eqref{eq:newton_mod} to be finite on short length scales. While adding this smoothing factor smooths out the instabilities, it also means that on length scales smaller than $\varepsilon$, the trajectories are not integrated accurately. This means that we should make sure to set the smoothing factor $\varepsilon$ to a length so that 1) instabilities are smoothed out, and 2) the inaccuracy in the trajectory does not play a significant part of the macroscopic evolution of the system.\\\\
 As we discussed earlier, we assume the system to be collisionless, and that collisions (or close encounters) should not affect the system much. Since our particles does not represent point particles, but mass distributions with some finite radius, a really close encounter between two particles might not be fully collisionless. The smoothing factor does then in a sense represent the fact that our system is not fully collisionless, but the magnitude of it is most likely considerably larger than the scale at which collisions become relevant.\\\\
-Finding an ideal size for $\varepsilon$ can be difficult. A simple way to evaluate this is to first find the mean interparticle distance. \red{cite Joyce full}
+Finding an ideal size for $\varepsilon$ can be difficult. A simple way to evaluate this is to first find the mean interparticle distance. \cite{JoyceFull}
 \begin{align*}
   l &\equiv \bigg(\frac{3V}{4\pi N}\bigg)^{1/3} = \frac{R_0}{N^{1/3}} \numberthis\label{eq:mean_dist}
 \end{align*}
@@ -227,7 +226,7 @@ where $R_0$ is the initial radius of the sphere, and $N$ is the number of partic
 
 %try to find fitting size order from mean particle distance and refer to article
 \subsubsection{Particle ejection}
-Due to looking at a \textit{cold collapse}, all particles start with a negative energy, but as the system evolves, some of the particles can end up with a positive energy, and completely escape from the system. We can therefore identify these ejected particles by comparing the per particle kinetic and potential energy, and identifying which particles have a total energy greater than zero
+Due to looking at a \textit{cold collapse}, all particles start with a negative energy, but as the system evolves, some of the particles can end up with a positive energy, and completely escape from the system. We can therefore identify these ejected particles by comparing the kinetic and potential energy per particle, and identifying which particles have a total energy greater than zero
 \begin{align*}
   E_{i,\text{tot}} = K_i + V_i > 0 \numberthis\label{eq:ejection}
 \end{align*}
@@ -256,13 +255,13 @@ For an approximately spherical symmetric collapsed halo (virialized structure), 
   n(r) = \frac{n_0}{\Big(1+(\frac{r}{r_0})^4\Big)} \numberthis\label{eq:radial_dist}
 \end{align*}
 where $n_0$ and the scale radius $r_0$ has some dependency on the number of particles $N$.\\\\
-The well-known Navarro-Frenk-White profile can also be used to compare with results.
+The well-known Navarro-Frenk-White profile can also be compared to the radial density distribution.
 \begin{align*}
   \rho(r) &= \frac{\rho_0}{\frac{r}{r_0}\Big(1+\frac{r}{r_0}\Big)^2}\numberthis\label{eq:NFW}
 \end{align*}
 where $\rho_0$ and $r_0$ depends on $N$ in some way.
 \subsubsection{Numerical solving}
-In order to solve the system numerically, we will employ the Velocity Verlet method. A full derivation of the Velocity Verlet method can be found in \red{cite project 3}, where the following algorithm is also found.
+In order to solve the system numerically, we will employ the Velocity Verlet method. A full derivation of the Velocity Verlet method can be found in \cite{Github3}, where the following algorithm is also found.
 \begin{algorithm}[H]
 \small
 \caption{Velocity Verlet}\label{alg:VelVerlet}
@@ -275,7 +274,7 @@ In order to solve the system numerically, we will employ the Velocity Verlet met
 \end{algorithmic}
 \end{algorithm}
 \subsection{Experimental}
-The programs used in this project can be found in the GitHub repository \cite{GitHub}, in the \texttt{/src/} folder. When running the program it takes 4 command line arguments: \texttt{N}, \texttt{t\_coll}, \texttt{dt} and \texttt{eps}. \texttt{N} is the number of stars in our cluster, \texttt{t\_coll} is our time unit, based on the collision time, \texttt{dt} is the time step and \texttt{eps} is the smoothing factor used in the force calculation. All data written to file by the main program are stored in \texttt{/benchmarks/} where most of the data analysis were done by python programs stored in \texttt{/python/} and the figures and gifs can be found in \texttt{/figures/}. \\ \\
+The programs used in this project can be found in the GitHub repository \cite{GitHub5}, in the \texttt{/src/} folder. When running the program it takes 4 command line arguments: \texttt{N}, \texttt{t\_coll}, \texttt{dt} and \texttt{eps}. \texttt{N} is the number of stars in our cluster, \texttt{t\_coll} is our time unit, based on the collision time, \texttt{dt} is the time step and \texttt{eps} is the smoothing factor used in the force calculation. All data written to file by the main program are stored in \texttt{/benchmarks/} where most of the data analysis were done by python programs stored in \texttt{/python/} and the figures and gifs can be found in \texttt{/figures/}. \\ \\
 The simulation starts by randomly positioning different stars inside a sphere with radius R = 20 light years. Each star will have an individual mass where the total mass is forced to be 1000 solar masses and an initial velocity set to be 0 in all directions. \\
 Once all the positions and masses have been set, we can find the forces acting between them. While using velocity verlet to simulate the behaviour we can also find the individual kinetic and potential energy of each star as well as the total kinetic and potential energy of the system. 
 \subsection{Results}
@@ -452,7 +451,7 @@ By simulating different number of particles with the same total mass we were abl
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%         task a        %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Choice of time step was done by trial and error. From the extended report \husk{cite Joyce full} we found that they had used a time step of 1.0e-05, but had a smaller radius. We tried different values and found that 1.0e-03 was a good time step which both gave us a good resolution while also keeping the time usage of the program low. \\ \\
+Choice of time step was done by trial and error. From the extended report \cite{JoyceFull} we found that they had used a time step of 1.0e-05, but had a smaller radius. We tried different values and found that 1.0e-03 was a good time step which both gave us a good resolution while also keeping the time usage of the program low. \\ \\
 In the limit $N \rightarrow \, \infty$ with a constant $\rho$ we get a continuous fluid. The system should then collapse into a singularity after one $t_{coll}$. However, we do not observe this collapse in our simulation. This is because we neglect collisions and our particles are not uniformly distributed. With random distribution there will be many particles that do not go through the center, and even if they did there would be nothing there to stop it as it can not collide.
 \\ \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -484,5 +483,8 @@ From figure \ref{fig:viral} the viral theorem fits better and better for higher 
 As we can see from figure \ref{fig:radialDens} the cluster is densest near origo. This is as expected 
 
 \subsection{Conclusion}
+In the end we found that a time step of $dt = 0.001$ was a good time step. Our simulation was not stable before we added a smoothing factor and this factor was found through trial and error to be good as 0.2 for N = 200  and 0.1 for N = 1000. With a smoothing factor we could look at total energy stability, fraction of particles escaping and the kinetic energy of these particles. We found that the energy was stable for all our values of N, that the fraction of particles escaping to some degree increased with increasing N although it went down again for N = 1000. The kinetic energy of the escaped particles decreased with increasing N meaning that even though a bigger fraction escaped, they had less energy with them. \\
+The virial theorem was seen to be increasingly better fullfilled for a system in equilibrium for increasing N, this is because we used the average over a large system, whos validity increases with increasing N, instead of time average. \\
+Our results were found to mostly be coinciding with those presented by M. Joyce and his co-workers \cite{Joyce}, \cite{JoyceFull}.
 \bibliography{references}
 \end{document}
