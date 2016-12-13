@@ -142,8 +142,13 @@
 \end{figure}
 \end{abstract}
 \subsection{Introduction}
-In this project we will attempt to develop code for simulating open galactic clusters. Taking inspiration from an article by M. Joyce and co-workers \red{cite}, we will build a simple model of an open galactic cluster. \red{redundancy ftw} An open cluster is an object consisting of a few thousand gravitationally bound stars, created from the collapse of a molecular cloud.\\\\
-First, we look at some of the physics behind our model, making sure to find ideal units to fit our timescale. Running our model for $N = 100$ particles, we check the stability of our system, and find an ideal smoothing function for the gravitational force to remove some of the numerical instabilities. Having done that, we check how long the system takes to stabilize, conservation of energy, and checking the fraction of particles ejected from the system. Looking at only the bound particles, we can check if our results are consistent with the virial theorem.\\\\
+In this project we will attempt to develop code that can be used for gravitational $N$-body simulations. Taking inspiration from an article by M. Joyce and co-workers \red{cite}, we will build a simple model of an open galactic cluster.
+\\\\
+An open cluster is a group consisting of up to a few thousand gravitationally bound stars, created from the collapse of a molecular cloud, and are usually found in the arms of spiral galaxies or in in irregular galaxies. The collapse of the cloud leads to a burst of star formation. As the stars of the cluster are of similar age and chemical composition, they are very import objects in the study of stellar evolution. Once formed, they gradually dissipate as members are ejected due to random interactions with other clusters, clouds of gas, or internal collisions.
+\\\\
+First, we look at some of the physics behind our model, making sure to find ideal units to fit our timescale. Running our model for $N = 100$ particles, we check the stability of our system, and find an ideal smoothing function for the gravitational force to remove some of the numerical instabilities. Having done that, we check how long the system takes to stabilize, conservation of energy, and checking the fraction of particles ejected from the system. Looking at only the bound particles, we can check if our results are consistent with the virial theorem.
+\red{write motivation for why N body simulations}
+\\\\
 Finally, we increase the number of particles while keeping the total mass constant, to see how the radial density looks like. This can then be compared to well known profiles such as the Navarro-Frenk-White profile.
 
 \subsection{Theory}
