@@ -60,11 +60,17 @@ void GalacticCluster::calculateForcesAndEnergy()
 
 void GalacticCluster::calculateEnergyPerParticle()
 {
+    /* Calculates the kinetic and potential energy per particle.
+     * Could have been done inside of calculateForcesAndEnergy
+     * but done here due to time constraints by the time we noticed.
+     * As long as we don't call it too often, it should be "fine".
+     */
     for(int i=0; i<numberOfBodies(); i++) {
         CelestialBody &body1 = m_bodies[i];
         double temp_potentialEnergy = 0; // Temporary sum of potential energy
         double temp_kineticEnergy =   0;   // Temporary kinetic energy
 
+        // Loop could be improved speed wise by applying the potential energy like we did with the forces in calcForcesAndEnergy
         for(int j=0; j<numberOfBodies(); j++)
         {
             if (i != j)
